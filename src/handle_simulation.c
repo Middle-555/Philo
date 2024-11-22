@@ -1,37 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   checking_error.c                                   :+:      :+:    :+:   */
+/*   handle_simulation.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kpourcel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/13 15:53:48 by kpourcel          #+#    #+#             */
-/*   Updated: 2024/11/22 16:27:19 by kpourcel         ###   ########.fr       */
+/*   Created: 2024/11/22 15:37:42 by kpourcel          #+#    #+#             */
+/*   Updated: 2024/11/22 15:42:13 by kpourcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-int	check_arguments(int argc, char **argv)
+void	end_simulation(t_data *data)
 {
+	t_philo *philo;
 	int		i;
-	long	value;
-	long	ttd;
 
-	if (argc < 5 || argc > 6)
-		error_msg("Incorrect number of arguments.");
-	i = 1;
-	while (i < argc)
+	i = 0;
+	philo = data->philos;
+	while (i < data->nbr_philo)
 	{
-		value = ft_atol(argv[i]);
-		if (value <= 0)
-			error_msg("Arguments must be greater than 0.");
+		pthread_join(philo[i].thread_id, NULL);
 		i++;
 	}
-	if (ft_atol(argv[1]) == 1)
-	{
-		ttd = ft_atol(argv[2]);
-		one_philo_case(ttd);
-	}
-	return (1);
+	i = 0;
+	while (++i < data->nbr_philo)
+		pthread_mutex_destroy(&(data->forks[i]));
+	pthread_mutex_destroy(&(data->mutex_eat));
+	pthread_mutex_destroy(&(data->mutex_print));
+	free(data->forks);
+	free(data->philos);
+	exit (0);
 }
