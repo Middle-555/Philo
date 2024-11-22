@@ -6,7 +6,7 @@
 /*   By: kpourcel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 14:11:14 by kpourcel          #+#    #+#             */
-/*   Updated: 2024/11/22 14:06:46 by kpourcel         ###   ########.fr       */
+/*   Updated: 2024/11/22 15:36:52 by kpourcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ typedef struct s_philo
 	long				time_since_meal;
 	t_fork				*left_fork;
 	t_fork				*right_fork;
-	int				full;
 	pthread_t			thread_id;
 	t_data				*data;
 }						t_philo;
@@ -62,7 +61,7 @@ typedef struct s_data
 {
 	t_fork				*forks;
 	t_philo				*philos;
-	//int					check_eat;
+	int					check_eat;
 	int					is_dead;
 	long				tts;
 	long				tte;
@@ -70,11 +69,8 @@ typedef struct s_data
 	long				meal_limit;
 	long				nbr_philo;
 	pthread_mutex_t		mutex_print;
-	pthread_mutex_t		mutex_check;
 	pthread_mutex_t		mutex_eat;
-	pthread_mutex_t		mutex_start;
 	long				start;
-	bool				end;
 }						t_data;
 
 // checking_error.c
@@ -82,8 +78,11 @@ int			check_input(char *argv);
 int			check_arguments(int argc, char **argv);
 
 // data.c
-
-
+void	sim_init(t_data *data);
+void	init_data(int argc, char **argv, t_data *data);
+// philo_death.c
+void	philo_death(t_data *data, t_philo *philo, int i);
+void	death_checker(t_data *data, t_philo *philo);
 // utils.c
 void		error_msg(char *str);
 int			ft_isdigit(int c);
@@ -96,4 +95,5 @@ long long	get_time(void);
 void		*safe_malloc(size_t size);
 void		cleanup(t_data *data);
 void		one_philo_case(long ttd);
+void		print_philo_status(t_data *data, int nb, char *str);
 #endif

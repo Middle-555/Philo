@@ -6,7 +6,7 @@
 /*   By: kpourcel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 17:00:24 by kpourcel          #+#    #+#             */
-/*   Updated: 2024/11/22 14:00:41 by kpourcel         ###   ########.fr       */
+/*   Updated: 2024/11/22 15:12:35 by kpourcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,12 @@ void	one_philo_case(long ttd)
 	current_time = get_time();
 	printf("%4lli 1 is dead\n", current_time + ttd);
 	error_msg("Philo 1 is dead");
+}
+
+void	print_philo_status(t_data *data, int nb, char *str)
+{
+	pthread_mutex_lock(&(data->mutex_print));
+	if (!data->is_dead)
+		printf("%4lli %i %s\n", (get_time() - data->start), nb, str);
+	pthread_mutex_unlock(&(data->mutex_print));
 }
