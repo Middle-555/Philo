@@ -6,7 +6,7 @@
 /*   By: kpourcel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 15:09:21 by kpourcel          #+#    #+#             */
-/*   Updated: 2024/11/22 16:18:03 by kpourcel         ###   ########.fr       */
+/*   Updated: 2024/11/25 14:16:25 by kpourcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,18 @@
 
 void	sim_init(t_data *data)
 {
-	int		i;
-	t_philo *philo;
-	
+	int			i;
+	t_philo		*philo;
+
 	i = 0;
 	philo = data->philos;
-
 	data->start = get_time();
 	while (i < data->nbr_philo)
 	{
 		pthread_create(&(philo[i].thread_id), NULL, philo_routine, &(philo[i]));
-		pthread_mutex_lock(&(data->mutex_eat));
+		pthread_mutex_lock(&(data->mutex_sim));
 		philo[i].time_since_meal = get_time();
-		pthread_mutex_unlock(&(data->mutex_eat));
+		pthread_mutex_unlock(&(data->mutex_sim));
 		i++;
 	}
 	death_checker(data, philo);
@@ -53,17 +52,17 @@ void	init_data(int argc, char **argv, t_data *data)
 
 void	init_mutex(t_data *data)
 {
-	int i;
+	int		i;
 
 	i = data->nbr_philo;
 	pthread_mutex_init(&(data->mutex_print), NULL);
-	pthread_mutex_init(&(data->mutex_eat), NULL);
+	pthread_mutex_init(&(data->mutex_sim), NULL);
 	while (--i >= 0)
 	{
 		pthread_mutex_init(&(data->forks[i]), NULL);
 		data->philos[i].philo_id = i + 1;
 		data->philos[i].meals = 0;
-		if (data->philos[i].philo_id % 2 == 0) 
+		if (data->philos[i].philo_id % 2 == 0)
 		{
 			data->philos[i].left_fork = i;
 			data->philos[i].right_fork = (i + 1) % data->nbr_philo;

@@ -6,7 +6,7 @@
 /*   By: kpourcel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 14:11:14 by kpourcel          #+#    #+#             */
-/*   Updated: 2024/11/22 16:27:24 by kpourcel         ###   ########.fr       */
+/*   Updated: 2024/11/25 14:14:32 by kpourcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ typedef struct s_data	t_data;
 typedef struct s_philo
 {
 	int					philo_id;
+	int					left_fork;
+	int					right_fork;
 	long				meals;
 	long				time_since_meal;
-	int				left_fork;
-	int				right_fork;
 	pthread_t			thread_id;
 	t_data				*data;
 }						t_philo;
@@ -60,7 +60,7 @@ typedef struct s_data
 	long				meal_limit;
 	long				nbr_philo;
 	pthread_mutex_t		mutex_print;
-	pthread_mutex_t		mutex_eat;
+	pthread_mutex_t		mutex_sim;
 	pthread_mutex_t		*forks;
 	long				start;
 }						t_data;
@@ -69,21 +69,21 @@ typedef struct s_data
 int			check_arguments(int argc, char **argv);
 
 // data.c
-void	sim_init(t_data *data);
-void	init_data(int argc, char **argv, t_data *data);
-void	init_mutex(t_data *data);
+void		sim_init(t_data *data);
+void		init_data(int argc, char **argv, t_data *data);
+void		init_mutex(t_data *data);
 
 // handle_simulation.c
-void	end_simulation(t_data *data);
+void		end_simulation(t_data *data);
 
 // philo_death.c
-void	philo_death(t_data *data, t_philo *philo, int i);
-void	death_checker(t_data *data, t_philo *philo);
+void		philo_death(t_data *data, t_philo *philo, int i);
+void		death_checker(t_data *data, t_philo *philo);
 
 //philo_routine.c
-void	*philo_routine(void *philo);
-void	eat(t_philo *philo);
-void	philo_wait(long time, t_data *data);
+void		*philo_routine(void *philo);
+void		eat(t_philo *philo);
+void		philo_wait(long time, t_data *data);
 
 // utils.c
 void		error_msg(char *str);
